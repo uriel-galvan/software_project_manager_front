@@ -1,0 +1,184 @@
+/* ============================================================
+   Paleta unificada CalidadPRO — ÚNICO archivo del proyecto con
+   valores hexadecimales. Todo componente consume var(--cp-*).
+   Referencia: ascend-standards, frontend-standards.md §7 y §20.
+   ============================================================ */
+
+:root {
+  /* --- Primario: azul institucional --- */
+  --cp-primary-50:  #e3f2fd;
+  --cp-primary-100: #bbdefb;
+  --cp-primary-200: #90caf9;
+  --cp-primary-300: #64b5f6;
+  --cp-primary-400: #42a5f5;
+  --cp-primary-500: #1976d2;
+  --cp-primary-600: #1565c0;
+  --cp-primary-700: #0d47a1;
+
+  /* --- Marca: azul marino --- */
+  --cp-brand:       #344767;
+  --cp-brand-mid:   #4a5e80;
+  --cp-brand-light: #6b80a0;
+
+  /* --- Neutrales --- */
+  --cp-n-900: #212529;
+  --cp-n-800: #343a40;
+  --cp-n-700: #495057;
+  --cp-n-600: #6c757d;
+  --cp-n-500: #adb5bd;
+  --cp-n-400: #ced4da;
+  --cp-n-300: #dee2e6;
+  --cp-n-200: #e9ecef;
+  --cp-n-100: #f8f9fa;
+  --cp-n-50:  #f0f2f5;
+
+  /* --- Semánticos --- */
+  --cp-success:         #198754;
+  --cp-success-hover:   #157347;
+  --cp-success-surface: #d1e7dd;
+  --cp-success-border:  #a3cfbb;
+
+  --cp-error:           #dc3545;
+  --cp-error-hover:     #bb2d3b;
+  --cp-error-surface:   #f8d7da;
+  --cp-error-border:    #f1aeb5;
+
+  --cp-warning:         #fd7e14;
+  --cp-warning-hover:   #e8700f;
+  --cp-warning-surface: #fff3cd;
+  --cp-warning-border:  #ffe69c;
+
+  --cp-info:            #0dcaf0;
+  --cp-info-dark:       #0aa2c0;
+  --cp-info-surface:    #cff4fc;
+  --cp-info-border:     #9eeaf9;
+
+  /* --- Superficies y bordes --- */
+  --cp-bg-page:        #e8ecf1;
+  --cp-bg-card:        #ffffff;
+  --cp-bg-tinted:      #ddeaf8;
+  --cp-bg-inset:       #f8f9fa;
+  --cp-border-subtle:  #e9ecef;
+  --cp-border:         #dee2e6;
+  --cp-border-strong:  #ced4da;
+
+  /* --- Texto --- */
+  --cp-text-primary:   #344767;
+  --cp-text-secondary: #6c757d;
+  --cp-text-muted:     #adb5bd;
+  --cp-text-inverse:   #ffffff;
+
+  /* --- Overlay y sombras --- */
+  --cp-overlay:      rgba(33, 37, 41, .45);
+  --cp-shadow-card:  0 1px 2px rgba(52, 71, 103, .06), 0 1px 1px rgba(52, 71, 103, .04);
+  --cp-shadow-modal: 0 24px 60px -20px rgba(52, 71, 103, .45), 0 8px 22px -12px rgba(52, 71, 103, .25);
+  --cp-ring:         0 0 0 3px var(--cp-primary-50);
+
+  /* --- Tipografía: Verdana en toda la UI (frontend-standards §6) ---
+     Los datos técnicos (path, método, slug, file:line) usan la misma familia
+     con letter-spacing ajustado en lugar de una fuente monoespaciada. */
+  --cp-ff:      Verdana, Geneva, "DejaVu Sans", sans-serif;
+  --cp-ff-code: Verdana, Geneva, "DejaVu Sans", sans-serif;
+  --cp-ls-code: .02em;
+
+  /* --- Métodos HTTP: derivados de los semánticos, no colores nuevos --- */
+  --cp-method-get-fg:      var(--cp-primary-500);
+  --cp-method-get-bg:      var(--cp-primary-50);
+  --cp-method-post-fg:     var(--cp-success);
+  --cp-method-post-bg:     var(--cp-success-surface);
+  --cp-method-put-fg:      var(--cp-warning-hover);
+  --cp-method-put-bg:      var(--cp-warning-surface);
+  --cp-method-patch-fg:    var(--cp-info-dark);
+  --cp-method-patch-bg:    var(--cp-info-surface);
+  --cp-method-delete-fg:   var(--cp-error);
+  --cp-method-delete-bg:   var(--cp-error-surface);
+  --cp-method-neutral-fg:  var(--cp-text-secondary);
+  --cp-method-neutral-bg:  var(--cp-n-200);
+
+  /* --- Tintes de servicio (cuadro con la inicial). Derivados del sistema. --- */
+  --cp-tint-1-fg: var(--cp-primary-600); --cp-tint-1-bg: var(--cp-primary-50);
+  --cp-tint-2-fg: var(--cp-success);     --cp-tint-2-bg: var(--cp-success-surface);
+  --cp-tint-3-fg: var(--cp-info-dark);   --cp-tint-3-bg: var(--cp-info-surface);
+  --cp-tint-4-fg: var(--cp-warning-hover); --cp-tint-4-bg: var(--cp-warning-surface);
+  --cp-tint-5-fg: var(--cp-brand);       --cp-tint-5-bg: var(--cp-n-200);
+
+  /* --- Escala de espaciado --- */
+  --cp-sp-1: 2px;
+  --cp-sp-2: 5px;
+  --cp-sp-3: 8px;
+  --cp-sp-4: 13px;
+  --cp-sp-5: 16px;
+  --cp-sp-6: 26px;
+
+  /* --- Radios --- */
+  --cp-r-xs: 4px;
+  --cp-r-sm: 6px;
+  --cp-r:    8px;
+  --cp-r-lg: 10px;
+}
+
+/* ============================================================
+   Modo oscuro. Redefine ÚNICAMENTE superficies, bordes, texto y
+   las variantes semánticas que necesitan contraste sobre fondo
+   oscuro. Los nombres de token no cambian, así que ningún
+   componente sabe en qué modo está.
+   ============================================================ */
+[data-theme='dark'] {
+  --cp-primary-500: #5b9bec;
+  --cp-primary-600: #7db0f1;
+  --cp-primary-700: #a2c7f5;
+  --cp-primary-50:  #14243a;
+
+  --cp-brand:       #c8d4e6;
+  --cp-brand-mid:   #9fb0c9;
+  --cp-brand-light: #7f90aa;
+
+  --cp-success:         #4caf7d;
+  --cp-success-hover:   #6ac295;
+  --cp-success-surface: #122a20;
+  --cp-success-border:  #1f4936;
+
+  --cp-error:           #ef6b76;
+  --cp-error-hover:     #f4878f;
+  --cp-error-surface:   #2d1619;
+  --cp-error-border:    #582a2f;
+
+  --cp-warning:         #e8913c;
+  --cp-warning-hover:   #f0a45c;
+  --cp-warning-surface: #2e2011;
+  --cp-warning-border:  #55391b;
+
+  --cp-info:            #4cc4dd;
+  --cp-info-dark:       #6fd2e6;
+  --cp-info-surface:    #10272d;
+  --cp-info-border:     #1e4a55;
+
+  --cp-bg-page:        #0f151f;
+  --cp-bg-card:        #161e2b;
+  --cp-bg-tinted:      #1b2533;
+  --cp-bg-inset:       #111926;
+  --cp-border-subtle:  #222c3c;
+  --cp-border:         #2a3648;
+  --cp-border-strong:  #3a4860;
+
+  --cp-text-primary:   #e4eaf3;
+  --cp-text-secondary: #9dabc0;
+  --cp-text-muted:     #6f7d92;
+  --cp-text-inverse:   #0f151f;
+
+  --cp-n-900: #e4eaf3;
+  --cp-n-800: #cfd8e5;
+  --cp-n-700: #b0bccd;
+  --cp-n-600: #9dabc0;
+  --cp-n-500: #6f7d92;
+  --cp-n-400: #4b5a70;
+  --cp-n-300: #2a3648;
+  --cp-n-200: #222c3c;
+  --cp-n-100: #1b2533;
+  --cp-n-50:  #161e2b;
+
+  --cp-overlay:      rgba(8, 12, 20, .6);
+  --cp-shadow-card:  0 1px 2px rgba(0, 0, 0, .3);
+  --cp-shadow-modal: 0 24px 60px -20px rgba(0, 0, 0, .7);
+  --cp-ring:         0 0 0 3px var(--cp-primary-50);
+}
