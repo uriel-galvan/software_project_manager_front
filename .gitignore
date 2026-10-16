@@ -2,3 +2,9 @@ node_modules
 dist
 .env
 *.local
+dist-lib
+ds-bundle
+.ds-sync
+.design-sync/.cache
+.design-sync/learnings
+.design-sync/node_modules

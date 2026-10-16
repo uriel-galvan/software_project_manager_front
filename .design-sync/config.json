@@ -1,0 +1,58 @@
+{
+  "projectId": "434437a1-2a53-4ac3-a854-4d156d398bb7",
+  "shape": "package",
+  "pkg": "software-manager-front",
+  "globalName": "RegistryHub",
+  "cssEntry": "dist-lib/styles.css",
+  "runtimeFontPrefixes": [
+    "Geneva"
+  ],
+  "buildCmd": "npm run build:lib",
+  "componentSrcMap": {
+    "CallVolume": "src/components/common/CallVolume.tsx",
+    "EmptyState": "src/components/common/EmptyState.tsx",
+    "ErrorState": "src/components/common/ErrorState.tsx",
+    "HealthDot": "src/components/common/HealthDot.tsx",
+    "Icon": "src/components/common/Icon.tsx",
+    "MethodBadge": "src/components/common/MethodBadge.tsx",
+    "Modal": "src/components/common/Modal.tsx",
+    "Segmented": "src/components/common/Segmented.tsx",
+    "ServiceRef": "src/components/common/ServiceRef.tsx",
+    "Skeleton": "src/components/common/Skeleton.tsx",
+    "TableSkeleton": "src/components/common/Skeleton.tsx",
+    "Snackbar": "src/components/common/Snackbar.tsx",
+    "SortableHeader": "src/components/common/SortableHeader.tsx",
+    "Breadcrumbs": "src/components/layout/Breadcrumbs.tsx",
+    "TopBar": "src/components/layout/TopBar.tsx"
+  },
+  "dtsPropsFor": {
+    "MethodBadge": "method: \"GET\" | \"POST\" | \"PUT\" | \"PATCH\" | \"DELETE\" | \"HEAD\" | \"OPTIONS\"; /** Etiqueta alternativa: «tarea», «label» — mismo badge, otro texto. */ label?: string; size?: \"sm\" | \"md\"; dashed?: boolean;",
+    "HealthDot": "status: \"ok\" | \"incomplete\" | \"no_reporting\" | \"no_data\"; label: string; tooltip: string; onClick?: () => void;",
+    "Snackbar": "message: { id: number; text: string; severity: \"success\" | \"error\" | \"warning\" } | null; onDismiss: () => void;",
+    "ErrorState": "error: { message: string; status: number; i18nKey: string }; onRetry?: () => void;",
+    "SortableHeader": "label: string; sortKey: string; activeKey: string; direction: \"asc\" | \"desc\"; onSort: (key: string) => void; align?: \"left\" | \"right\";",
+    "Breadcrumbs": "crumbs: { label: string; isCode?: boolean; onClick?: () => void }[]; activeTab: \"states\" | \"system\" | null; onGoStates: () => void; onGoSystem: () => void;",
+    "TopBar": "environment: \"dev\" | \"staging\" | \"prod\"; onEnvironmentChange: (env: \"dev\" | \"staging\" | \"prod\") => void; hash: string; isLinkCopied: boolean; onCopyLink: () => void; onOpenSearch: () => void; theme: \"light\" | \"dark\"; onToggleTheme: () => void; onGoHome: () => void;"
+  },
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "Modal": {
+      "cardMode": "single",
+      "primaryStory": "Confirmacion",
+      "viewport": "640x420"
+    },
+    "Snackbar": {
+      "cardMode": "single",
+      "primaryStory": "Exito"
+    },
+    "TableSkeleton": {
+      "cardMode": "column"
+    },
+    "Breadcrumbs": {
+      "cardMode": "column"
+    },
+    "TopBar": {
+      "cardMode": "column"
+    }
+  }
+}
