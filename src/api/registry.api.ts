@@ -1,7 +1,7 @@
 /**
  * Llamadas tipadas al hub. Una función por ruta; sin lógica de pantalla.
  */
-import { apiGet, apiGetAll } from './client';
+import { apiGet, apiGetAll, apiPost } from './client';
 import type {
   ConsumersPayload,
   EndpointDetail,
@@ -10,6 +10,7 @@ import type {
   GraphPayload,
   HealthPayload,
   ObservedConsumer,
+  PlannerAnswer,
   SearchPayload,
   ServiceDetail,
   ServiceSummary,
@@ -106,4 +107,13 @@ export function fetchSearch(
   signal?: AbortSignal,
 ): Promise<SearchPayload> {
   return apiGet<SearchPayload>('/search/', { q: query, environment, limit }, signal);
+}
+
+/** RAG sobre la documentación de endpoints. Lento (modelo local): sin debounce. */
+export function askPlanner(
+  question: string,
+  environment: Environment,
+  signal?: AbortSignal,
+): Promise<PlannerAnswer> {
+  return apiPost<PlannerAnswer>('/knowledge/ask/', { q: question, environment }, signal);
 }

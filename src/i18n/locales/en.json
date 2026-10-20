@@ -29,7 +29,8 @@
     "NOT_FOUND": "The hub replied that this resource does not exist.",
     "FORBIDDEN": "The hub rejected the read for lack of authorization.",
     "SERVER": "The hub replied with an internal error.",
-    "UNKNOWN": "The hub replied with something this client cannot interpret."
+    "UNKNOWN": "The hub replied with something this client cannot interpret.",
+    "LLM_UNAVAILABLE": "The generative model is unavailable. Check that Ollama is running."
   },
   "NAV": {
     "STATES": "States",
@@ -253,7 +254,10 @@
     "EMPTY_BODY": "It may exist undocumented: semantic search only sees what has a summary or a description.",
     "RESULTS_one": "{{count}} result",
     "RESULTS_other": "{{count}} results",
-    "FOOTER": "environment {{env}} — results never mix across environments"
+    "FOOTER": "environment {{env}} — results never mix across environments",
+    "MODE_LABEL": "Mode",
+    "MODE_SEARCH": "Search",
+    "MODE_PLAN": "Plan"
   },
   "STATES": {
     "TITLE": "Explicit states",
@@ -331,5 +335,13 @@
     "COMP_VOLUME_RULE": "Compact in the cell, exact on hover and an estimate notice when sampling happened.",
     "COMP_STALE_TITLE": "Stale mark",
     "COMP_STALE_RULE": "The same in lists, tables and graph edges: dimmed, labelled and with a visible date."
+  },
+  "PLANNER": {
+    "PLACEHOLDER": "Ask, or describe what you want to implement…",
+    "HINT": "Ask what exists or how to compose a feature from the documented endpoints. Enter to send.",
+    "THINKING": "Reading the documentation… this may take a few seconds.",
+    "NOT_GROUNDED": "No relevant documentation: the model was not consulted.",
+    "SOURCES": "Cited endpoints",
+    "FOOTER_HINT": "Answers only from indexed documentation. Verify before implementing."
   }
 }

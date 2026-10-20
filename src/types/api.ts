@@ -243,6 +243,23 @@ export interface SearchPayload {
   results: EndpointSummary[];
 }
 
+/** Un endpoint citado por el planeador (`apis/knowledge/types.py::Source`). */
+export interface PlannerSource {
+  regd3_index: number;
+  service: string;
+  method: string;
+  path: string;
+  note: string;
+  distance: number;
+}
+
+export interface PlannerAnswer {
+  answer: string;
+  /** false: no había documentación relevante y el modelo no se invocó. */
+  grounded: boolean;
+  sources: PlannerSource[];
+}
+
 /* ── salud del proceso ────────────────────────────────────── */
 
 export interface HealthzPayload {

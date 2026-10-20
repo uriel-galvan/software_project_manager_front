@@ -29,7 +29,8 @@
     "NOT_FOUND": "El hub respondió que ese recurso no existe.",
     "FORBIDDEN": "El hub rechazó la lectura por falta de autorización.",
     "SERVER": "El hub respondió con un error interno.",
-    "UNKNOWN": "El hub respondió algo que este cliente no sabe interpretar."
+    "UNKNOWN": "El hub respondió algo que este cliente no sabe interpretar.",
+    "LLM_UNAVAILABLE": "El modelo generativo no está disponible. Revisa que Ollama esté corriendo."
   },
   "NAV": {
     "STATES": "Estados",
@@ -253,7 +254,10 @@
     "EMPTY_BODY": "Puede que exista sin documentar: la búsqueda semántica solo ve lo que tiene summary o descripción.",
     "RESULTS_one": "{{count}} resultado",
     "RESULTS_other": "{{count}} resultados",
-    "FOOTER": "entorno {{env}} — los resultados nunca se mezclan entre entornos"
+    "FOOTER": "entorno {{env}} — los resultados nunca se mezclan entre entornos",
+    "MODE_LABEL": "Modo",
+    "MODE_SEARCH": "Buscar",
+    "MODE_PLAN": "Planear"
   },
   "STATES": {
     "TITLE": "Estados explícitos",
@@ -331,5 +335,13 @@
     "COMP_VOLUME_RULE": "Compacto en la celda, exacto al pasar el cursor y aviso de estimado cuando hubo muestreo.",
     "COMP_STALE_TITLE": "Marca de stale",
     "COMP_STALE_RULE": "La misma en listas, tablas y aristas del grafo: atenuado, etiqueta y fecha visible."
+  },
+  "PLANNER": {
+    "PLACEHOLDER": "Pregunta o describe qué quieres implementar…",
+    "HINT": "Pregunta qué existe o cómo componer una funcionalidad con lo documentado. Enter para enviar.",
+    "THINKING": "Consultando la documentación… puede tardar unos segundos.",
+    "NOT_GROUNDED": "Sin documentación relevante: el modelo no se consultó.",
+    "SOURCES": "Endpoints citados",
+    "FOOTER_HINT": "Responde solo con la documentación indexada. Verifica antes de implementar."
   }
 }

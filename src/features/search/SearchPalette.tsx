@@ -6,11 +6,13 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { Icon } from '@/components/common/Icon';
 import { MethodBadge } from '@/components/common/MethodBadge';
 import { Modal } from '@/components/common/Modal';
+import { Segmented } from '@/components/common/Segmented';
 import { ServiceRef } from '@/components/common/ServiceRef';
 import { TableSkeleton } from '@/components/common/Skeleton';
 import { useAsync } from '@/hooks/useAsync';
 import { useServiceName } from '@/features/shell/HubContext';
 import type { EndpointSummary, Environment } from '@/types/api';
+import { PlannerMode } from './PlannerMode';
 
 const DEBOUNCE_MS = 250;
 const LIMIT = 8;
@@ -22,7 +24,31 @@ interface SearchPaletteProps {
   onOpenEndpoint: (slug: string, endpointId: number) => void;
 }
 
+type PaletteMode = 'search' | 'plan';
+
+/** Una sola paleta, dos modos: buscar endpoints o preguntarle al planeador (RAG). */
 export function SearchPalette(props: SearchPaletteProps): React.ReactElement {
+  const { t } = useTranslation();
+  const [mode, setMode] = useState<PaletteMode>('search');
+  const toggle = (
+    <Segmented<PaletteMode>
+      ariaLabel={t('SEARCH.MODE_LABEL')}
+      value={mode}
+      onChange={setMode}
+      options={[
+        { value: 'search', label: t('SEARCH.MODE_SEARCH') },
+        { value: 'plan', label: t('SEARCH.MODE_PLAN') },
+      ]}
+    />
+  );
+  return mode === 'plan' ? (
+    <PlannerMode {...props} toggle={toggle} />
+  ) : (
+    <SearchMode {...props} toggle={toggle} />
+  );
+}
+
+function SearchMode(props: SearchPaletteProps & { toggle: React.ReactNode }): React.ReactElement {
   const { t } = useTranslation();
   const serviceName = useServiceName();
   const [query, setQuery] = useState<string>('');
@@ -52,6 +78,7 @@ export function SearchPalette(props: SearchPaletteProps): React.ReactElement {
       onClose={props.onClose}
       header={
         <>
+          {props.toggle}
           <Icon name="search" size={16} color="var(--cp-text-secondary)" />
           <input
             autoFocus

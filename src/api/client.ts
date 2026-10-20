@@ -43,7 +43,8 @@ function buildUrl(path: string, params?: QueryParams): string {
   return url.toString();
 }
 
-function errorKeyFor(status: number): string {
+function errorKeyFor(status: number, code?: string): string {
+  if (code === 'llm_unavailable') return 'ERRORS.LLM_UNAVAILABLE';
   if (status === 0) return 'ERRORS.NETWORK';
   if (status === 404) return 'ERRORS.NOT_FOUND';
   if (status === 401 || status === 403) return 'ERRORS.FORBIDDEN';
@@ -76,6 +77,43 @@ export async function apiGet<T>(
         ? (payload.message ?? payload.detail ?? response.statusText)
         : response.statusText;
     throw new ApiError(message, response.status, errorKeyFor(response.status));
+  }
+
+  if (!payload || payload.status !== 'success') {
+    throw new ApiError('malformed envelope', response.status, 'ERRORS.UNKNOWN');
+  }
+
+  return payload.data;
+}
+
+/** POST JSON. Solo lo usa el planeador: el resto del hub se lee con GET. */
+export async function apiPost<T>(
+  path: string,
+  body: unknown,
+  signal?: AbortSignal,
+): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(buildUrl(path), {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal,
+    });
+  } catch (cause) {
+    if (cause instanceof DOMException && cause.name === 'AbortError') throw cause;
+    throw new ApiError('network unreachable', 0, errorKeyFor(0));
+  }
+
+  const payload = (await response.json().catch(() => null)) as AscendEnvelope<T> | null;
+
+  if (!response.ok) {
+    const failure = payload && payload.status === 'error' ? payload : null;
+    throw new ApiError(
+      failure?.message ?? failure?.detail ?? response.statusText,
+      response.status,
+      errorKeyFor(response.status, failure?.code),
+    );
   }
 
   if (!payload || payload.status !== 'success') {
