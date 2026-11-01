@@ -94,11 +94,19 @@ export function HubShell(props: HubShellProps): React.ReactElement {
     if (props.route.screen === 'states') return <StatesPage />;
     if (props.route.screen === 'system') return <SystemPage theme={props.theme} />;
 
-    if (hub.isEnvironmentEmpty) {
+    // Solo en el catálogo: la ficha de un servicio recién creado (sin manifest
+    // todavía) tiene que poder abrirse para emitirle su token.
+    if (hub.isEnvironmentEmpty && props.route.screen === 'services') {
       return (
         <EnvironmentEmpty
           environment={env}
+          registered={hub.services.map((service) => service.reg_slug)}
           onBackToProd={() => props.navigate({ ...props.route, env: 'prod' })}
+          onOpenService={openService}
+          onServiceCreated={(slug) => {
+            hub.reload();
+            openService(slug);
+          }}
         />
       );
     }

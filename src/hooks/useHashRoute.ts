@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Environment } from '@/types/api';
 import type { Route, ScreenName } from '@/types/ui';
 
-const ENVIRONMENTS: readonly Environment[] = ['dev', 'staging', 'prod'];
+export const ENVIRONMENTS: readonly Environment[] = ['dev', 'staging', 'prod'];
 const DEFAULT_ENV: Environment = 'prod';
 
 export function isEnvironment(value: string): value is Environment {

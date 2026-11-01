@@ -5,6 +5,7 @@ import { fetchService, fetchServiceEndpoints } from '@/api/registry.api';
 import { ErrorState } from '@/components/common/ErrorState';
 import { TableSkeleton } from '@/components/common/Skeleton';
 import { HealthBanner } from '@/features/health/HealthBanner';
+import { ServiceAdminTab } from '@/features/service-admin/ServiceAdminTab';
 import { useHealthCopy } from '@/features/health/useHealthCopy';
 import { useHub, useServiceName } from '@/features/shell/HubContext';
 import { useAsync } from '@/hooks/useAsync';
@@ -240,6 +241,15 @@ export function ServiceDetailPage(props: ServiceDetailPageProps): React.ReactEle
             )}
           />
         </div>
+      ) : tab === 'admin' ? (
+        <ServiceAdminTab
+          service={service}
+          onServiceChanged={() => {
+            bundle.reload();
+            // El catálogo compartido también muestra nombre y equipo.
+            hub.reload();
+          }}
+        />
       ) : (
         <ServiceDependencies
           slug={props.slug}

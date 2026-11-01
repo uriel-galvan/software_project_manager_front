@@ -45,35 +45,46 @@ function buildUrl(path: string, params?: QueryParams): string {
 
 function errorKeyFor(status: number): string {
   if (status === 0) return 'ERRORS.NETWORK';
+  if (status === 400) return 'ERRORS.VALIDATION';
   if (status === 404) return 'ERRORS.NOT_FOUND';
   if (status === 401 || status === 403) return 'ERRORS.FORBIDDEN';
   if (status >= 500) return 'ERRORS.SERVER';
   return 'ERRORS.UNKNOWN';
 }
 
-export async function apiGet<T>(
+type HttpVerb = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+
+async function request<T>(
+  method: HttpVerb,
   path: string,
-  params?: QueryParams,
-  signal?: AbortSignal,
+  options: { params?: QueryParams; body?: unknown; signal?: AbortSignal } = {},
 ): Promise<T> {
+  const hasBody = options.body !== undefined;
   let response: Response;
   try {
-    response = await fetch(buildUrl(path, params), {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      signal,
+    response = await fetch(buildUrl(path, options.params), {
+      method,
+      headers: {
+        Accept: 'application/json',
+        ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+      },
+      body: hasBody ? JSON.stringify(options.body) : undefined,
+      signal: options.signal,
     });
   } catch (cause) {
     if (cause instanceof DOMException && cause.name === 'AbortError') throw cause;
     throw new ApiError('network unreachable', 0, errorKeyFor(0));
   }
 
+  // 204 (DELETE) sale sin cuerpo y sin envoltura.
+  if (response.status === 204) return undefined as T;
+
   const payload = (await response.json().catch(() => null)) as AscendEnvelope<T> | null;
 
   if (!response.ok) {
     const message =
       payload && payload.status === 'error'
-        ? (payload.message ?? payload.detail ?? response.statusText)
+        ? (payload.error ?? payload.message ?? payload.detail ?? response.statusText)
         : response.statusText;
     throw new ApiError(message, response.status, errorKeyFor(response.status));
   }
@@ -83,6 +94,26 @@ export async function apiGet<T>(
   }
 
   return payload.data;
+}
+
+export function apiGet<T>(
+  path: string,
+  params?: QueryParams,
+  signal?: AbortSignal,
+): Promise<T> {
+  return request<T>('GET', path, { params, signal });
+}
+
+/**
+ * Escritura. Los 400 del hub traen un mensaje legible (`error`) que la UI
+ * muestra tal cual en `ApiError.message`: dice qué regla se violó.
+ */
+export function apiSend<T>(
+  method: Exclude<HttpVerb, 'GET'>,
+  path: string,
+  body?: unknown,
+): Promise<T> {
+  return request<T>(method, path, { body });
 }
 
 /** `/healthz/` vive fuera de `/services/apis/`: es la sonda del proceso. */

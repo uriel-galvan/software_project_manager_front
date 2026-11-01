@@ -9,7 +9,7 @@ import type { HealthView } from '@/types/ui';
 /** Un manifest de más de dos semanas ya merece una mirada. */
 const STALE_MANIFEST_DAYS = 14;
 
-export type ServiceTab = 'endpoints' | 'dependencies';
+export type ServiceTab = 'endpoints' | 'dependencies' | 'admin';
 
 interface ServiceHeaderProps {
   service: ServiceDetail;
@@ -171,6 +171,13 @@ export function ServiceHeader(props: ServiceHeaderProps): React.ReactElement {
           onClick={() => props.onTabChange('dependencies')}
         >
           {t('SERVICE.TAB_DEPENDENCIES')}
+        </button>
+        <button
+          type="button"
+          style={{ ...tabStyle('admin'), marginLeft: 'auto' }}
+          onClick={() => props.onTabChange('admin')}
+        >
+          {t('SERVICE.TAB_ADMIN')}
         </button>
       </div>
     </div>

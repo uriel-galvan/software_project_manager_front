@@ -11,6 +11,8 @@ export interface AscendSuccess<T> {
 
 export interface AscendError {
   status: 'error';
+  /** Mensaje aplanado por `custom_exception_handler`. */
+  error?: string;
   message?: string;
   detail?: string;
   code?: string;
@@ -53,6 +55,8 @@ export interface ServiceSummary {
   reg_description: string;
   reg_owner_team: string;
   reg_repo_url: string;
+  /** Campos de la ficha editados a mano: el manifest ya no los pisa. */
+  reg_locked_fields: ServiceCardField[];
   endpoint_count: number;
   reg_created_at: string;
   reg_updated_at: string;
@@ -61,6 +65,54 @@ export interface ServiceSummary {
 /** `RegMstrDetailSerializer` — `/services/apis/services/{slug}/` */
 export interface ServiceDetail extends ServiceSummary {
   hosts: HostAlias[];
+}
+
+/* ── administración ───────────────────────────────────────── */
+
+/** Campos de la ficha que también escribe el manifest (`CARD_FIELDS`). */
+export type ServiceCardField =
+  | 'reg_name'
+  | 'reg_description'
+  | 'reg_owner_team'
+  | 'reg_repo_url';
+
+export type ServiceCardInput = Partial<Record<ServiceCardField, string>>;
+
+/** `RegMstrWriteSerializer` en alta: el slug solo se fija aquí. */
+export interface ServiceCreateInput extends ServiceCardInput {
+  reg_slug: string;
+}
+
+/** `HostWriteSerializer` */
+export interface HostInput {
+  service?: string;
+  regd1_environment?: string;
+  regd1_host?: string;
+  regd1_isexternal?: boolean;
+}
+
+/** `Regd4TokenSerializer` — nunca trae el secreto. */
+export interface ServiceToken {
+  regd4_index: number;
+  service: string;
+  regd4_environment: string;
+  regd4_label: string;
+  regd4_created_at: string;
+  regd4_last_used_at: string | null;
+  regd4_revoked_at: string | null;
+  is_active: boolean;
+  /** `false` en tokens emitidos antes de guardar el secreto cifrado. */
+  is_recoverable: boolean;
+}
+
+/** `Regd4TokenSecretSerializer` — lo devuelven emitir, rotar y revelar. */
+export interface ServiceTokenSecret extends ServiceToken {
+  token: string;
+}
+
+export interface TokenUpdateInput {
+  environment?: string;
+  label?: string;
 }
 
 /** `Regd3EndpointSerializer` */

@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorState } from '@/components/common/ErrorState';
 import { useHub } from '@/features/shell/HubContext';
+import { CreateServiceModal } from './CreateServiceModal';
 import { ServicesFilters } from './ServicesFilters';
 import { ServicesTable } from './ServicesTable';
 import { UninstrumentedTable } from './UninstrumentedTable';
@@ -30,6 +31,15 @@ export function ServicesPage({ onOpenService }: ServicesPageProps): React.ReactE
   const [filters, setFilters] = useState<ServiceFilters>(EMPTY_FILTERS);
   const [sortKey, setSortKey] = useState<ServiceSortKey>('consumerCount');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+
+  // Dados de alta pero sin manifest ni tráfico en este entorno: no tienen fila
+  // en el catálogo, y sin este acceso un servicio recién creado no se encuentra
+  // para emitirle su token.
+  const registeredOnly = useMemo(() => {
+    const present = new Set(hub.rows.map((row) => row.slug));
+    return hub.services.filter((service) => !present.has(service.reg_slug));
+  }, [hub.rows, hub.services]);
 
   const teams = useMemo<string[]>(
     () => [...new Set(hub.rows.map((row) => row.team).filter(Boolean))].sort(),
@@ -81,10 +91,54 @@ export function ServicesPage({ onOpenService }: ServicesPageProps): React.ReactE
             })}
           </div>
         </div>
-        <div style={{ marginLeft: 'auto' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--cp-sp-3)' }}>
           <ServicesFilters filters={filters} teams={teams} onChange={setFilters} />
+          <button
+            type="button"
+            className="cp-btn cp-btn--primary"
+            onClick={() => setIsCreating(true)}
+          >
+            {t('SERVICES.NEW')}
+          </button>
         </div>
       </div>
+
+      {!hub.isLoading && registeredOnly.length > 0 ? (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 'var(--cp-sp-2)',
+            marginBottom: 'var(--cp-sp-4)',
+            fontSize: 12,
+            color: 'var(--cp-text-secondary)',
+          }}
+        >
+          <span>{t('SERVICES.REGISTERED_ONLY', { env: hub.environment })}</span>
+          {registeredOnly.map((service) => (
+            <button
+              key={service.reg_slug}
+              type="button"
+              className="cp-chip cp-code"
+              onClick={() => onOpenService(service.reg_slug)}
+            >
+              {service.reg_slug}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {isCreating ? (
+        <CreateServiceModal
+          onClose={() => setIsCreating(false)}
+          onCreated={(slug) => {
+            setIsCreating(false);
+            hub.reload();
+            onOpenService(slug);
+          }}
+        />
+      ) : null}
 
       <ServicesTable
         rows={visibleRows}

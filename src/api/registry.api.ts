@@ -1,7 +1,7 @@
 /**
  * Llamadas tipadas al hub. Una función por ruta; sin lógica de pantalla.
  */
-import { apiGet, apiGetAll } from './client';
+import { apiGet, apiGetAll, apiSend } from './client';
 import type {
   ConsumersPayload,
   EndpointDetail,
@@ -9,10 +9,17 @@ import type {
   Environment,
   GraphPayload,
   HealthPayload,
+  HostAlias,
+  HostInput,
   ObservedConsumer,
   SearchPayload,
+  ServiceCardInput,
+  ServiceCreateInput,
   ServiceDetail,
   ServiceSummary,
+  ServiceToken,
+  ServiceTokenSecret,
+  TokenUpdateInput,
   UnresolvedPayload,
 } from '@/types/api';
 
@@ -106,4 +113,72 @@ export function fetchSearch(
   signal?: AbortSignal,
 ): Promise<SearchPayload> {
   return apiGet<SearchPayload>('/search/', { q: query, environment, limit }, signal);
+}
+
+/* ── administración ───────────────────────────────────────── */
+
+export function createService(input: ServiceCreateInput): Promise<ServiceDetail> {
+  return apiSend<ServiceDetail>('POST', '/services/', input);
+}
+
+export function updateService(slug: string, input: ServiceCardInput): Promise<ServiceDetail> {
+  return apiSend<ServiceDetail>('PATCH', `/services/${slug}/`, input);
+}
+
+/** Devuelve la ficha al manifest: vacía `reg_locked_fields`. */
+export function unlockService(slug: string): Promise<ServiceDetail> {
+  return apiSend<ServiceDetail>('POST', `/services/${slug}/unlock/`);
+}
+
+export function createHost(input: HostInput): Promise<HostAlias> {
+  return apiSend<HostAlias>('POST', '/hosts/', input);
+}
+
+export function updateHost(id: number, input: HostInput): Promise<HostAlias> {
+  return apiSend<HostAlias>('PATCH', `/hosts/${id}/`, input);
+}
+
+export function deleteHost(id: number): Promise<void> {
+  return apiSend<void>('DELETE', `/hosts/${id}/`);
+}
+
+export function fetchTokens(
+  slug: string,
+  includeRevoked: boolean,
+  signal?: AbortSignal,
+): Promise<ServiceToken[]> {
+  return apiGet<ServiceToken[]>(
+    '/tokens/',
+    { service: slug, include_revoked: includeRevoked ? 'true' : undefined },
+    signal,
+  );
+}
+
+export function issueToken(
+  slug: string,
+  environment: string,
+  label: string,
+): Promise<ServiceTokenSecret> {
+  return apiSend<ServiceTokenSecret>('POST', '/tokens/', {
+    service: slug,
+    environment,
+    label,
+  });
+}
+
+export function updateToken(id: number, input: TokenUpdateInput): Promise<ServiceToken> {
+  return apiSend<ServiceToken>('PATCH', `/tokens/${id}/`, input);
+}
+
+/** POST y no GET: que el secreto no quede en cachés ni en el historial. */
+export function revealToken(id: number): Promise<ServiceTokenSecret> {
+  return apiSend<ServiceTokenSecret>('POST', `/tokens/${id}/reveal/`);
+}
+
+export function rotateToken(id: number): Promise<ServiceTokenSecret> {
+  return apiSend<ServiceTokenSecret>('POST', `/tokens/${id}/rotate/`);
+}
+
+export function revokeToken(id: number): Promise<ServiceToken> {
+  return apiSend<ServiceToken>('POST', `/tokens/${id}/revoke/`);
 }
